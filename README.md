@@ -1,0 +1,7 @@
+- background
+  - bkg1.jpg
+  - bkg2.jpg
+- original_imgs
+  - classes.txt
+  - img1.jpg
+  - img1.txt
