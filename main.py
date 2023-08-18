@@ -1,14 +1,17 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 import random
 
 from utils import get_document,decide_where_to_paste,decide_resize,create_yolo_doc,resize_prop
 
 class CreateInstance():
-    def __init__(self,file_name,background_name,angle,final_width=None):
+    def __init__(self,file_name,background_name,angle,blur=0,gray=0,final_width=None,background_size=(1920,1080)):
         self.file_name = file_name
         self.background_name = background_name
         self.final_width = final_width
         self.angle = angle
+        self.blur = blur
+        self.gray = gray
+        self.background_size = background_size
 
     def create_with_yolo(self):
 
@@ -21,8 +24,16 @@ class CreateInstance():
         document = document.rotate(self.angle, expand=True)
         mask = mask.rotate(self.angle, expand=True)
 
+        if self.blur != 0:
+            document = document.filter(ImageFilter.GaussianBlur(self.blur))
+
+        if self.gray != 0:
+            document = ImageOps.grayscale(document)
+
         # GET BACKGROUND
         background = get_document('background/{}'.format(self.background_name))
+
+        background = background.resize(self.background_size)
 
         resize_bool, i, j = decide_resize(document,background)
         if resize_bool:
@@ -57,8 +68,16 @@ class CreateInstance():
         document = document.rotate(self.angle, expand=True)
         mask = mask.rotate(self.angle, expand=True)
 
+        if self.blur != 0:
+            document = document.filter(ImageFilter.GaussianBlur(self.blur))
+
+        if self.gray != 0:
+            document = ImageOps.grayscale(document)
+
         # GET BACKGROUND
         background = get_document('background/{}'.format(self.background_name))
+
+        background = background.resize(self.background_size)
 
         resize_bool, i, j = decide_resize(document,background)
         if resize_bool:
@@ -85,10 +104,14 @@ class CreateInstance():
 
 if __name__ == "__main__":
 
-    FILE_NAME = 'imagem.jpg'
-    BACKGROUND_NAME = 'table_3.jpg'
-    ANGLE = 190
-    FINAL_WIDTH = 480
+    FILE_NAME = 'image.jpg'
+    BACKGROUND_NAME = 'fuzzy_2.jpg'
 
-    CreateInstance(FILE_NAME,BACKGROUND_NAME,ANGLE,FINAL_WIDTH).create_with_yolo()
+    ANGLE_DOC = -25
+    BLUR_DOC = 0
+    GRAY_DOC = 0
+    BACKGROUND_SIZE = (1920,1080)
+    FINAL_WIDTH = 1080
+    
+    CreateInstance(FILE_NAME,BACKGROUND_NAME,ANGLE_DOC,BLUR_DOC,GRAY_DOC,FINAL_WIDTH,BACKGROUND_SIZE).create_without_yolo('0')
     
