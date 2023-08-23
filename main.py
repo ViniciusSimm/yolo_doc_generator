@@ -105,7 +105,7 @@ class CreateInstance():
 if __name__ == "__main__":
 
     FILE_NAME = 'image.jpg'
-    BACKGROUND_NAME = 'fuzzy_2.jpg'
+    BACKGROUND_NAME = 'wood_3.jpg'
 
     ANGLE_DOC = -25
     BLUR_DOC = 0
